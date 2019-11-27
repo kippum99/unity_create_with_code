@@ -4,58 +4,26 @@ using UnityEngine;
 
 public class CueController : MonoBehaviour
 {
-    public Rigidbody rb;
-
     public float horizontalInput;
     public GameObject cueBall;
-    public GameObject table;
 
     private float rotateAngle = -5;
     private float speed = 0.5f;
-    private float force = 200;
-    private bool shooting = false;
+    private float force = 2;
 
-    private bool ballsMoving = false;
-    private float ballsMovingEps = 0.1f;
-
-    private bool cueHit = false;
-    private float timeSinceHit;
+    private GameFlowManager gameFlowManager;
+    private Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
     {
+        gameFlowManager = GameObject.Find("GameFlowManager").GetComponent<GameFlowManager>();
         rb = GetComponent<Rigidbody>();
-        Physics.IgnoreCollision(table.GetComponent<Collider>(), GetComponent<Collider>());
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Check if all balls stopped moving
-        if (ballsMoving) {
-            ballsMoving = false;
-            foreach (GameObject ball in GameObject.FindGameObjectsWithTag("Ball")) {
-                Rigidbody ballRb = ball.GetComponent<Rigidbody>();
-                if (ballRb.velocity.magnitude > ballsMovingEps) {
-                    ballsMoving = true;
-                    break;
-                }
-                else {
-                    ballRb.velocity = Vector3.zero;
-                    ballRb.angularVelocity = Vector3.zero;
-                }
-            }
-
-            // Reset cue if balls stopped moving
-            if (!ballsMoving) {
-                // Reset position
-                Debug.Log("Balls stopped moving");
-                Vector3 ballPos = cueBall.transform.position;
-                transform.position = new Vector3(ballPos.x, 2.2931f, ballPos.z - 3.485f);
-                transform.rotation = Quaternion.Euler(5.533f, 0, 0);
-            }
-        }
-
         // Get user input to rotate cue around cue ball
         horizontalInput = Input.GetAxis("Horizontal");
         transform.RotateAround(cueBall.transform.position, Vector3.up, horizontalInput * rotateAngle);
@@ -65,26 +33,14 @@ public class CueController : MonoBehaviour
             transform.Translate(Vector3.forward * Time.deltaTime * -speed);
         }
         else if (Input.GetKeyUp(KeyCode.Space)) {
-            shooting = true;
-        }
+            // Make cue stick disappear
+            gameObject.active = false;
 
-        // Accelerate cue stick if released
-        if (shooting) {
-            rb.AddForce(transform.forward * force);
+            // Shoot cue ball
+            float dist = Vector3.Distance(transform.position, cueBall.transform.position);
+            cueBall.GetComponent<Rigidbody>().AddForce(transform.forward * force * dist, ForceMode.Impulse);
+            gameFlowManager.ready = false;
+            gameFlowManager.ballsMoving = true;
         }
-
-        // Set ballsMoving after 3 seconds
-        timeSinceHit += Time.deltaTime;
-        if (cueHit && timeSinceHit > 3) {
-            ballsMoving = true;
-        }
-    }
-
-    // Stop cue stick when it hits cue ball and marks balls as moving
-    private void OnCollisionEnter(Collision collision) {
-        rb.isKinematic = true;
-        shooting = false;
-        cueHit = true;
-        timeSinceHit = 0;
     }
 }
