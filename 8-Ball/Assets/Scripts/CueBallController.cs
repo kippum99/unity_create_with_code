@@ -26,7 +26,7 @@ public class CueBallController : MonoBehaviour
             transform.Translate(new Vector3(0, 0, 1) * verticalInput * Time.deltaTime, Space.World);
 
             // Release with space key
-            if (Input.GetKeyDown(KeyCode.Space)) {
+            if (Input.GetKeyUp(KeyCode.Space)) {
                 transform.position = new Vector3(transform.position.x, tableHeight, transform.position.z);
                 rb.isKinematic = false;
             }

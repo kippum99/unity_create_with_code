@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Change condition to involving kinematic or change cueballcontroller to getkeyup
         if (gameFlowManager.ready && gameObject.activeSelf) {
             // // Reset cue
             // Vector3 ballPos = cueBall.transform.position;

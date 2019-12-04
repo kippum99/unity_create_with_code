@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43846694, g: 0.4865523, b: 0.5668249, a: 1}
+  m_IndirectSpecularColor: {r: 0.43846726, g: 0.48655307, b: 0.5668256, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -837,7 +837,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalInput: 0
   cueBall: {fileID: 1683987160}
-  table: {fileID: 206755098}
 --- !u!1 &848172736 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: cdac80e1dd15a450f93408e7aa5be2f7,
@@ -1522,6 +1521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cueBall: {fileID: 1683987160}
   cueStick: {fileID: 771000892}
+  ready: 1
   ballsMoving: 0
 --- !u!4 &1275520191
 Transform:
@@ -1977,6 +1977,18 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.0100000035
   m_Center: {x: -0.0000000018626451, y: -0.0000000027939686, z: 0.0000000032596301}
+--- !u!114 &1683987166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683987160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d686a9663a614d1985a6ba0e1a523b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1686269210 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: cdac80e1dd15a450f93408e7aa5be2f7,
