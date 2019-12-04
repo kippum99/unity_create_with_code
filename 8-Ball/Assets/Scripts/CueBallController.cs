@@ -27,9 +27,14 @@ public class CueBallController : MonoBehaviour
 
             // Release with space key
             if (Input.GetKeyUp(KeyCode.Space)) {
-                transform.position = new Vector3(transform.position.x, tableHeight, transform.position.z);
-                rb.isKinematic = false;
+                StartCoroutine(releaseBall());
             }
         }
+    }
+
+    IEnumerator releaseBall() {
+        yield return new WaitForSeconds(0.5f);
+        transform.position = new Vector3(transform.position.x, tableHeight, transform.position.z);
+        rb.isKinematic = false;
     }
 }
