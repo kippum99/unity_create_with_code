@@ -13,7 +13,8 @@ public class GameFlowManager : MonoBehaviour
 
     private float ballsMovingEps = 0.15f;
     private float ballsStopTimeThreshold = 2;
-    private float tableHeight = 1.963f;
+    private float tableHeight = 1.96f;
+    private Vector3 cueBallNewPos = new Vector3(0, 2.5f, 0);
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,7 @@ public class GameFlowManager : MonoBehaviour
             else if (!ballsMoving) {
                 // If balls haven't moved for 3 seconds
                 if (ballsStopTime > ballsStopTimeThreshold) {
-                    Debug.Log("Balls stopped moving");
+                    // Debug.Log("Balls stopped moving");
 
                     // Ensure balls stop
                     foreach (GameObject ball in GameObject.FindGameObjectsWithTag("Ball")) {
@@ -45,14 +46,7 @@ public class GameFlowManager : MonoBehaviour
                         ballRb.angularVelocity = Vector3.zero;
                     }
 
-                    // Reset position
                     ready = true;
-
-                    // Reset cue position
-                    Vector3 ballPos = cueBall.transform.position;
-                    cueStick.transform.position = new Vector3(ballPos.x, 2.2931f, ballPos.z - 3.485f);
-                    cueStick.transform.rotation = Quaternion.Euler(5.533f, 0, 0);
-                    cueStick.gameObject.active = true;
                 }
                 // Check if balls started moving again
                 else {
@@ -60,6 +54,24 @@ public class GameFlowManager : MonoBehaviour
                         ballsMoving = true;
                         ballsStopTime = 0;
                     }
+                }
+            }
+        }
+        // If game is ready
+        else {
+            if (!cueStick.activeSelf) {
+                // Reset cue position if cue ball is ready
+                if (cueBall.activeSelf && !cueBall.GetComponent<Rigidbody>().isKinematic) {
+                    Vector3 ballPos = cueBall.transform.position;
+                    cueStick.transform.position = new Vector3(ballPos.x, 2.2931f, ballPos.z - 3.485f);
+                    cueStick.transform.rotation = Quaternion.Euler(5.533f, 0, 0);
+                    cueStick.SetActive(true);
+                }
+                else if (!cueBall.activeSelf){
+                    // Move cue ball if foul
+                    cueBall.transform.position = cueBallNewPos;
+                    cueBall.GetComponent<Rigidbody>().isKinematic = true;
+                    cueBall.SetActive(true);
                 }
             }
         }
@@ -85,8 +97,13 @@ public class GameFlowManager : MonoBehaviour
     // Remove balls in pockets from scene
     void ClearBallsIn() {
         foreach (GameObject ball in GameObject.FindGameObjectsWithTag("Ball")) {
-            if (CheckBallIn(ball) && ball != cueBall) {
-                Destroy(ball);
+            if (CheckBallIn(ball)) {
+                if (ball != cueBall) {
+                    Destroy(ball);
+                }
+                else {
+                    ball.SetActive(false);
+                }
             }
         }
     }
