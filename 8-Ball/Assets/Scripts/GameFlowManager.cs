@@ -18,6 +18,7 @@ public class GameFlowManager : MonoBehaviour
     private float ballsMovingEps = 0.15f;
     private float ballsStopTimeThreshold = 2.5f;
     private float tableHeight = 1.9632f;
+    private float tableHeightBelowEps = 0.004f;
     private float tableHeightEps = 0.003f;
     private Vector3 cueBallNewPos = new Vector3(0, 2.5f, 0);
 
@@ -111,7 +112,10 @@ public class GameFlowManager : MonoBehaviour
                 else if (ball == eightBall) {
                     Destroy(ball);
 
+                    // Check if player won or not
                     int numBalls = GameObject.FindGameObjectsWithTag("Ball").Length;
+                    numBalls -= cueBall.activeSelf ? 1 : 0;
+
                     if (numBalls > 0) {
                         audioSrc.PlayOneShot(booSound, 1);
                         Debug.Log("Game over! You lost :(");
@@ -132,6 +136,6 @@ public class GameFlowManager : MonoBehaviour
 
     // Check if ball is in pocket
     bool CheckBallIn(GameObject ball) {
-        return ball.transform.position.y < tableHeight - tableHeightEps;
+        return ball.transform.position.y < tableHeight - tableHeightBelowEps;
     }
 }
