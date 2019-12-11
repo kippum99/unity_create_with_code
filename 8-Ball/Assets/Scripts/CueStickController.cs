@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class CueStickController : MonoBehaviour
 {
     public float horizontalInput;
     public GameObject cueBall;
+    public AudioSource audioSrc;
+    public AudioClip shootSound;
 
     private float rotateAngle = -5;
     private float speed = 0.5f;
@@ -28,12 +30,6 @@ public class PlayerController : MonoBehaviour
     {
         // Change condition to involving kinematic or change cueballcontroller to getkeyup
         if (gameFlowManager.ready && gameObject.activeSelf) {
-            // // Reset cue
-            // Vector3 ballPos = cueBall.transform.position;
-            // transform.position = new Vector3(ballPos.x, 2.2931f, ballPos.z - 3.485f);
-            // transform.rotation = Quaternion.Euler(5.533f, 0, 0);
-            // gameObject.SetActive(true);
-
             // Get user input to rotate cue around cue ball
             horizontalInput = Input.GetAxis("Horizontal");
             transform.RotateAround(cueBall.transform.position, Vector3.up, horizontalInput * rotateAngle);
@@ -43,6 +39,9 @@ public class PlayerController : MonoBehaviour
                 transform.Translate(Vector3.forward * Time.deltaTime * -speed);
             }
             else if (Input.GetKeyUp(KeyCode.Space)) {
+                // Play sound effect
+                audioSrc.PlayOneShot(shootSound, 1);
+
                 // Make cue stick disappear
                 gameObject.SetActive(false);
 
