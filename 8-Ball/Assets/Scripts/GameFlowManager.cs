@@ -5,14 +5,18 @@ using UnityEngine;
 public class GameFlowManager : MonoBehaviour
 {
     public GameObject cueBall;
+    public GameObject eightBall;
     public GameObject cueStick;
+    public AudioSource audioSrc;
+    public AudioClip booSound;
+    public AudioClip applauseSound;
 
     public bool ready = true;       // If player is ready to play
     public bool ballsMoving = false;
     private float ballsStopTime = 0;
 
     private float ballsMovingEps = 0.15f;
-    private float ballsStopTimeThreshold = 2;
+    private float ballsStopTimeThreshold = 2.5f;
     private float tableHeight = 1.9632f;
     private float tableHeightEps = 0.003f;
     private Vector3 cueBallNewPos = new Vector3(0, 2.5f, 0);
@@ -100,11 +104,27 @@ public class GameFlowManager : MonoBehaviour
     void ClearBallsIn() {
         foreach (GameObject ball in GameObject.FindGameObjectsWithTag("Ball")) {
             if (CheckBallIn(ball)) {
-                if (ball != cueBall) {
+                if (ball == cueBall) {
+                    ball.SetActive(false);
+                    audioSrc.PlayOneShot(booSound, 1);
+                }
+                else if (ball == eightBall) {
                     Destroy(ball);
+
+                    int numBalls = GameObject.FindGameObjectsWithTag("Ball").Length;
+                    if (numBalls > 0) {
+                        audioSrc.PlayOneShot(booSound, 1);
+                        Debug.Log("Game over! You lost :(");
+                    }
+                    else {
+                        audioSrc.PlayOneShot(applauseSound, 1);
+                        Debug.Log("Game over! You won :)");
+                    }
+
                 }
                 else {
-                    ball.SetActive(false);
+                    Destroy(ball);
+                    audioSrc.PlayOneShot(applauseSound, 1);
                 }
             }
         }
