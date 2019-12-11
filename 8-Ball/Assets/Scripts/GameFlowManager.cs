@@ -15,6 +15,9 @@ public class GameFlowManager : MonoBehaviour
     public bool ballsMoving = false;
     private float ballsStopTime = 0;
 
+    private float cueStickBallDistZ = 3.485f;
+    private float cueStickPosY = 2.4f;
+    private float cueStickRotX = 7.3f;
     private float ballsMovingEps = 0.15f;
     private float ballsStopTimeThreshold = 2.5f;
     private float tableHeight = 1.9632f;
@@ -66,12 +69,14 @@ public class GameFlowManager : MonoBehaviour
         // If game is ready
         else {
             if (!cueStick.activeSelf) {
-                // Reset cue position if cue ball is ready
+                // Reset cue position if cue ball is ready and clear Debug Log
                 if (cueBall.activeSelf && !cueBall.GetComponent<Rigidbody>().isKinematic) {
                     Vector3 ballPos = cueBall.transform.position;
-                    cueStick.transform.position = new Vector3(ballPos.x, 2.2931f, ballPos.z - 3.485f);
-                    cueStick.transform.rotation = Quaternion.Euler(5.533f, 0, 0);
+                    cueStick.transform.position = new Vector3(ballPos.x, cueStickPosY, ballPos.z - cueStickBallDistZ);
+                    cueStick.transform.rotation = Quaternion.Euler(cueStickRotX, 0, 0);
                     cueStick.SetActive(true);
+
+                    Debug.Log("");
                 }
                 else if (!cueBall.activeSelf){
                     // Move cue ball if foul
@@ -107,6 +112,7 @@ public class GameFlowManager : MonoBehaviour
             if (CheckBallIn(ball)) {
                 if (ball == cueBall) {
                     ball.SetActive(false);
+                    Debug.Log("Foul!");
                     audioSrc.PlayOneShot(booSound, 1);
                 }
                 else if (ball == eightBall) {
