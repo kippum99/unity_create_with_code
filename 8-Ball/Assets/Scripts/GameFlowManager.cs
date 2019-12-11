@@ -13,7 +13,8 @@ public class GameFlowManager : MonoBehaviour
 
     private float ballsMovingEps = 0.15f;
     private float ballsStopTimeThreshold = 2;
-    private float tableHeight = 1.96f;
+    private float tableHeight = 1.9632f;
+    private float tableHeightEps = 0.003f;
     private Vector3 cueBallNewPos = new Vector3(0, 2.5f, 0);
 
     // Start is called before the first frame update
@@ -81,7 +82,8 @@ public class GameFlowManager : MonoBehaviour
         bool ballsFast = false;
         foreach (GameObject ball in GameObject.FindGameObjectsWithTag("Ball")) {
             Rigidbody ballRb = ball.GetComponent<Rigidbody>();
-            if (ballRb.velocity.magnitude > ballsMovingEps) {
+            if (ballRb.velocity.magnitude > ballsMovingEps
+                || ball.transform.position.y > tableHeight + tableHeightEps) {
                 ballsFast = true;
                 break;
             }
@@ -110,6 +112,6 @@ public class GameFlowManager : MonoBehaviour
 
     // Check if ball is in pocket
     bool CheckBallIn(GameObject ball) {
-        return ball.transform.position.y < tableHeight;
+        return ball.transform.position.y < tableHeight - tableHeightEps;
     }
 }
